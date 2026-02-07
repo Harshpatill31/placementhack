@@ -13,6 +13,19 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import NotFound from "./pages/NotFound";
 
+// Opportunity Pages
+import InternshipsPage from "./pages/InternshipsPage";
+import CompetitionsPage from "./pages/CompetitionsPage";
+import MockTestsPage from "./pages/MockTestsPage";
+import MentorshipsPage from "./pages/MentorshipsPage";
+import CoursesPage from "./pages/CoursesPage";
+import SavedPage from "./pages/SavedPage";
+
+// Social Pages
+import NetworkPage from "./pages/NetworkPage";
+import MessagesPage from "./pages/MessagesPage";
+import NotificationsPage from "./pages/NotificationsPage";
+
 // Student Pages
 import JobsPage from "./pages/JobsPage";
 import ApplicationsPage from "./pages/ApplicationsPage";
@@ -36,6 +49,47 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            
+            {/* Opportunity Routes (accessible to all) */}
+            <Route path="/internships" element={<InternshipsPage />} />
+            <Route path="/competitions" element={<CompetitionsPage />} />
+            <Route path="/mock-tests" element={<MockTestsPage />} />
+            <Route path="/mentorships" element={<MentorshipsPage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route
+              path="/saved"
+              element={
+                <ProtectedRoute>
+                  <SavedPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Social Routes */}
+            <Route
+              path="/network"
+              element={
+                <ProtectedRoute>
+                  <NetworkPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  <MessagesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute>
+                  <NotificationsPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Student Routes */}
             <Route
