@@ -624,6 +624,119 @@ export type Database = {
           },
         ]
       }
+      mentor_bookings: {
+        Row: {
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          meeting_link: string | null
+          mentee_id: string
+          mentor_id: string
+          notes: string | null
+          rating: number | null
+          review: string | null
+          scheduled_at: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          meeting_link?: string | null
+          mentee_id: string
+          mentor_id: string
+          notes?: string | null
+          rating?: number | null
+          review?: string | null
+          scheduled_at: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          meeting_link?: string | null
+          mentee_id?: string
+          mentor_id?: string
+          notes?: string | null
+          rating?: number | null
+          review?: string | null
+          scheduled_at?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_bookings_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentors: {
+        Row: {
+          available_slots: Json | null
+          bio: string | null
+          calendly_url: string | null
+          created_at: string
+          currency: string | null
+          expertise: string[] | null
+          hourly_rate: number | null
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          linkedin_url: string | null
+          rating: number | null
+          review_count: number | null
+          title: string | null
+          total_sessions: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          available_slots?: Json | null
+          bio?: string | null
+          calendly_url?: string | null
+          created_at?: string
+          currency?: string | null
+          expertise?: string[] | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          linkedin_url?: string | null
+          rating?: number | null
+          review_count?: number | null
+          title?: string | null
+          total_sessions?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          available_slots?: Json | null
+          bio?: string | null
+          calendly_url?: string | null
+          created_at?: string
+          currency?: string | null
+          expertise?: string[] | null
+          hourly_rate?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          linkedin_url?: string | null
+          rating?: number | null
+          review_count?: number | null
+          title?: string | null
+          total_sessions?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           attachments: string[] | null
@@ -689,6 +802,175 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      opportunities: {
+        Row: {
+          banner_url: string | null
+          company_id: string | null
+          created_at: string
+          currency: string | null
+          current_participants: number | null
+          description: string | null
+          duration: string | null
+          eligibility: string | null
+          end_date: string | null
+          external_url: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          is_free: boolean | null
+          location: string | null
+          locations: string[] | null
+          max_participants: number | null
+          metadata: Json | null
+          mode: Database["public"]["Enums"]["opportunity_mode"] | null
+          opportunity_type: Database["public"]["Enums"]["opportunity_type"]
+          organizer_logo: string | null
+          organizer_name: string | null
+          price: number | null
+          prize_description: string | null
+          prize_pool: number | null
+          registration_deadline: string | null
+          required_skills: string[] | null
+          short_description: string | null
+          start_date: string | null
+          stipend_max: number | null
+          stipend_min: number | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          views_count: number | null
+        }
+        Insert: {
+          banner_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          currency?: string | null
+          current_participants?: number | null
+          description?: string | null
+          duration?: string | null
+          eligibility?: string | null
+          end_date?: string | null
+          external_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          is_free?: boolean | null
+          location?: string | null
+          locations?: string[] | null
+          max_participants?: number | null
+          metadata?: Json | null
+          mode?: Database["public"]["Enums"]["opportunity_mode"] | null
+          opportunity_type: Database["public"]["Enums"]["opportunity_type"]
+          organizer_logo?: string | null
+          organizer_name?: string | null
+          price?: number | null
+          prize_description?: string | null
+          prize_pool?: number | null
+          registration_deadline?: string | null
+          required_skills?: string[] | null
+          short_description?: string | null
+          start_date?: string | null
+          stipend_max?: number | null
+          stipend_min?: number | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Update: {
+          banner_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          currency?: string | null
+          current_participants?: number | null
+          description?: string | null
+          duration?: string | null
+          eligibility?: string | null
+          end_date?: string | null
+          external_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          is_free?: boolean | null
+          location?: string | null
+          locations?: string[] | null
+          max_participants?: number | null
+          metadata?: Json | null
+          mode?: Database["public"]["Enums"]["opportunity_mode"] | null
+          opportunity_type?: Database["public"]["Enums"]["opportunity_type"]
+          organizer_logo?: string | null
+          organizer_name?: string | null
+          price?: number | null
+          prize_description?: string | null
+          prize_pool?: number | null
+          registration_deadline?: string | null
+          required_skills?: string[] | null
+          short_description?: string | null
+          start_date?: string | null
+          stipend_max?: number | null
+          stipend_min?: number | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunities_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opportunity_registrations: {
+        Row: {
+          certificate_url: string | null
+          completed_at: string | null
+          id: string
+          metadata: Json | null
+          opportunity_id: string
+          registered_at: string
+          score: number | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          certificate_url?: string | null
+          completed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          opportunity_id: string
+          registered_at?: string
+          score?: number | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          certificate_url?: string | null
+          completed_at?: string | null
+          id?: string
+          metadata?: Json | null
+          opportunity_id?: string
+          registered_at?: string
+          score?: number | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_registrations_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       posts: {
         Row: {
@@ -892,6 +1174,35 @@ export type Database = {
           },
         ]
       }
+      saved_opportunities: {
+        Row: {
+          created_at: string
+          id: string
+          opportunity_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          opportunity_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          opportunity_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_opportunities_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       skills: {
         Row: {
           category: string | null
@@ -998,6 +1309,14 @@ export type Database = {
         | "rejected"
       connection_status: "pending" | "accepted" | "rejected"
       job_type: "full_time" | "internship" | "contract" | "part_time"
+      opportunity_mode: "online" | "offline" | "hybrid" | "wfh"
+      opportunity_type:
+        | "internship"
+        | "job"
+        | "competition"
+        | "mock_test"
+        | "mentorship"
+        | "course"
       verification_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -1138,6 +1457,15 @@ export const Constants = {
       ],
       connection_status: ["pending", "accepted", "rejected"],
       job_type: ["full_time", "internship", "contract", "part_time"],
+      opportunity_mode: ["online", "offline", "hybrid", "wfh"],
+      opportunity_type: [
+        "internship",
+        "job",
+        "competition",
+        "mock_test",
+        "mentorship",
+        "course",
+      ],
       verification_status: ["pending", "approved", "rejected"],
     },
   },
