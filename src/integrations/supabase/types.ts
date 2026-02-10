@@ -767,6 +767,97 @@ export type Database = {
         }
         Relationships: []
       }
+      mock_test_questions: {
+        Row: {
+          correct_answer: number
+          created_at: string
+          difficulty: string | null
+          explanation: string | null
+          id: string
+          opportunity_id: string | null
+          options: Json
+          question: string
+          topic: string | null
+        }
+        Insert: {
+          correct_answer: number
+          created_at?: string
+          difficulty?: string | null
+          explanation?: string | null
+          id?: string
+          opportunity_id?: string | null
+          options?: Json
+          question: string
+          topic?: string | null
+        }
+        Update: {
+          correct_answer?: number
+          created_at?: string
+          difficulty?: string | null
+          explanation?: string | null
+          id?: string
+          opportunity_id?: string | null
+          options?: Json
+          question?: string
+          topic?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_test_questions_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_test_results: {
+        Row: {
+          answers: Json | null
+          completed_at: string
+          correct_answers: number
+          created_at: string
+          id: string
+          opportunity_id: string | null
+          score: number
+          time_taken_seconds: number
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          completed_at?: string
+          correct_answers?: number
+          created_at?: string
+          id?: string
+          opportunity_id?: string | null
+          score?: number
+          time_taken_seconds?: number
+          total_questions?: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          completed_at?: string
+          correct_answers?: number
+          created_at?: string
+          id?: string
+          opportunity_id?: string | null
+          score?: number
+          time_taken_seconds?: number
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_test_results_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -1202,6 +1293,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      search_history: {
+        Row: {
+          created_at: string
+          id: string
+          query: string
+          result_count: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          query: string
+          result_count?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          query?: string
+          result_count?: number | null
+          user_id?: string
+        }
+        Relationships: []
       }
       skills: {
         Row: {
