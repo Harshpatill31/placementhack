@@ -40,10 +40,8 @@ const Sidebar = ({ isCollapsed = false }: SidebarProps) => {
     { icon: Home, label: "Home", href: "/" },
     { icon: Briefcase, label: "Jobs", href: "/jobs" },
     { icon: Briefcase, label: "Internships", href: "/internships" },
-    { icon: Trophy, label: "Competitions", href: "/competitions" },
     { icon: FileText, label: "Mock Tests", href: "/mock-tests" },
     { icon: GraduationCap, label: "Mentorships", href: "/mentorships" },
-    { icon: Code, label: "Courses", href: "/courses" },
   ];
 
   const socialNavItems = [

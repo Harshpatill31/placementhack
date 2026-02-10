@@ -32,8 +32,7 @@ const Index = () => {
   const { data: featuredOpportunities, isLoading: loadingFeatured } = useFeaturedOpportunities();
   const { data: internships, isLoading: loadingInternships } = useOpportunitiesByType("internship", 10);
   const { data: jobs, isLoading: loadingJobs } = useOpportunitiesByType("job", 10);
-  const { data: competitions, isLoading: loadingCompetitions } = useOpportunitiesByType("competition", 10);
-  const { data: courses, isLoading: loadingCourses } = useOpportunitiesByType("course", 10);
+  const { data: mockTests, isLoading: loadingMockTests } = useOpportunitiesByType("mock_test", 10);
 
   const handleSearch = (query: string) => {
     // TODO: Navigate to search results page
