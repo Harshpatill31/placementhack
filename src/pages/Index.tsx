@@ -314,25 +314,10 @@ const Index = () => {
             isLoading={loadingJobs}
           />
 
-          {/* Competitions section */}
-          <FeaturedCarousel 
-            opportunities={competitions || []} 
-            title="Competitions" 
-            isLoading={loadingCompetitions}
-          />
-
-          {/* Courses section */}
-          <FeaturedCarousel 
-            opportunities={courses || []} 
-            title="Courses" 
-            isLoading={loadingCourses}
-          />
-
           {/* Empty state when no opportunities */}
           {!loadingFeatured && !featuredOpportunities?.length && 
            !loadingInternships && !internships?.length &&
-           !loadingJobs && !jobs?.length &&
-           !loadingCompetitions && !competitions?.length && (
+           !loadingJobs && !jobs?.length && (
             <div className="text-center py-20">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6">
                 <Building2 className="h-10 w-10 text-primary" />
