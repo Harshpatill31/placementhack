@@ -66,7 +66,7 @@ const App = () => (
             <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
 
             {/* Student Routes */}
-            <Route path="/jobs" element={<ProtectedRoute allowedRoles={["student"]}><JobsPage /></ProtectedRoute>} />
+            <Route path="/jobs" element={<JobsPage />} />
             <Route path="/applications" element={<ProtectedRoute allowedRoles={["student"]}><ApplicationsPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
