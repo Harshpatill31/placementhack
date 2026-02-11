@@ -1,29 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { toast } from "sonner";
+import { lovable } from "@/integrations/lovable/index";
 
 const SocialAuthButtons = () => {
-  const { signInWithGoogle, signInWithLinkedIn } = useAuth();
   const [loadingGoogle, setLoadingGoogle] = useState(false);
-  const [loadingLinkedIn, setLoadingLinkedIn] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setLoadingGoogle(true);
-    const { error } = await signInWithGoogle();
-    if (error) {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error("Failed to sign in with Google. Please try again.");
+      }
+    } catch {
       toast.error("Failed to sign in with Google. Please try again.");
+    } finally {
+      setLoadingGoogle(false);
     }
-    setLoadingGoogle(false);
-  };
-
-  const handleLinkedInSignIn = async () => {
-    setLoadingLinkedIn(true);
-    const { error } = await signInWithLinkedIn();
-    if (error) {
-      toast.error("Failed to sign in with LinkedIn. Please try again.");
-    }
-    setLoadingLinkedIn(false);
   };
 
   return (
@@ -33,7 +29,7 @@ const SocialAuthButtons = () => {
         variant="outline"
         className="w-full gap-3 h-11"
         onClick={handleGoogleSignIn}
-        disabled={loadingGoogle || loadingLinkedIn}
+        disabled={loadingGoogle}
       >
         <svg
           className="h-5 w-5"
@@ -58,24 +54,6 @@ const SocialAuthButtons = () => {
           />
         </svg>
         {loadingGoogle ? "Connecting..." : "Continue with Google"}
-      </Button>
-
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full gap-3 h-11"
-        onClick={handleLinkedInSignIn}
-        disabled={loadingGoogle || loadingLinkedIn}
-      >
-        <svg
-          className="h-5 w-5"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#0A66C2"
-        >
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-        </svg>
-        {loadingLinkedIn ? "Connecting..." : "Continue with LinkedIn"}
       </Button>
     </div>
   );
