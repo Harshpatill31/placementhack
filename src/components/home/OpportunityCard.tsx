@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -53,8 +54,13 @@ const OpportunityCard = ({
   onSaveToggle,
 }: OpportunityCardProps) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [saved, setSaved] = useState(isSaved);
   const [saving, setSaving] = useState(false);
+
+  const handleCardClick = () => {
+    navigate(`/jobs/${id}`);
+  };
 
   const handleSaveToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -125,7 +131,7 @@ const OpportunityCard = ({
   };
 
   return (
-    <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border/50 bg-card">
+    <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border/50 bg-card cursor-pointer" onClick={handleCardClick}>
       <div className="relative aspect-[4/3] overflow-hidden">
         {imageUrl ? (
           <img
