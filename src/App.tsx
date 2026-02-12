@@ -33,7 +33,9 @@ import SettingsPage from "./pages/SettingsPage";
 
 // Company Pages
 import CompanyDashboard from "./pages/company/CompanyDashboard";
-
+import PostJobPage from "./pages/company/PostJobPage";
+import CompanyApplicantsPage from "./pages/company/CompanyApplicantsPage";
+import CompanyProfileEditPage from "./pages/company/CompanyProfileEditPage";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -73,6 +75,11 @@ const App = () => (
 
             {/* Company Routes */}
             <Route path="/company/dashboard" element={<ProtectedRoute allowedRoles={["company"]}><CompanyDashboard /></ProtectedRoute>} />
+
+            <Route path="/company/post-job" element={<ProtectedRoute allowedRoles={["company"]}><PostJobPage /></ProtectedRoute>} />
+            <Route path="/company/applicants" element={<ProtectedRoute allowedRoles={["company"]}><CompanyApplicantsPage /></ProtectedRoute>} />
+            <Route path="/company/jobs/:jobId/applicants" element={<ProtectedRoute allowedRoles={["company"]}><CompanyApplicantsPage /></ProtectedRoute>} />
+            <Route path="/company/profile/edit" element={<ProtectedRoute allowedRoles={["company"]}><CompanyProfileEditPage /></ProtectedRoute>} />
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
