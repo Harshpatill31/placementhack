@@ -243,48 +243,7 @@ const SignupForm = () => {
             )}
           />
 
-          {watchRole === "student" && (
-            <FormField
-              control={form.control}
-              name="collegeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select Your College</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={loadingColleges}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            loadingColleges
-                              ? "Loading colleges..."
-                              : "Select your college"
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {colleges.length === 0 ? (
-                        <SelectItem value="none" disabled>
-                          No colleges available yet
-                        </SelectItem>
-                      ) : (
-                        colleges.map((college) => (
-                          <SelectItem key={college.id} value={college.id}>
-                            {college.name} - {college.city}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          {/* College selection removed per user request */}
 
           <FormField
             control={form.control}
