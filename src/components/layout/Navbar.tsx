@@ -29,6 +29,8 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/hooks/useTheme";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Navbar = () => {
   const { user, role, signOut } = useAuth();
@@ -36,6 +38,21 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: unreadNotifCount } = useQuery({
+    queryKey: ["unread-notifications-count", user?.id],
+    queryFn: async () => {
+      if (!user) return 0;
+      const { count } = await supabase
+        .from("notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("is_read", false);
+      return count || 0;
+    },
+    enabled: !!user,
+    refetchInterval: 10000,
+  });
 
   const handleSignOut = async () => {
     await signOut();
@@ -155,11 +172,15 @@ const Navbar = () => {
             {user ? (
               <>
                 {/* Notifications */}
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
-                    3
-                  </span>
+                <Button variant="ghost" size="icon" className="relative" asChild>
+                  <Link to="/notifications">
+                    <Bell className="h-5 w-5" />
+                    {(unreadNotifCount || 0) > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                        {unreadNotifCount! > 9 ? "9+" : unreadNotifCount}
+                      </span>
+                    )}
+                  </Link>
                 </Button>
 
                 {/* User Menu */}

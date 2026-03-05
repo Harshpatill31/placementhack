@@ -100,7 +100,7 @@ const Sidebar = ({ isCollapsed = false }: SidebarProps) => {
     <aside
       className={cn(
         "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-background border-r border-border",
-        "flex flex-col py-4 transition-all duration-300 z-40",
+        "hidden md:flex flex-col py-4 transition-all duration-300 z-40",
         isCollapsed ? "w-16" : "w-64",
         "overflow-y-auto scrollbar-hide"
       )}

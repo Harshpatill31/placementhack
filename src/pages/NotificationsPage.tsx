@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Bell, Check, ChevronLeft, Trash2 } from "lucide-react";
+import { Bell, Check, ChevronLeft, MessageSquare, Users, Briefcase, Heart } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/layout/Navbar";
-import Sidebar from "@/components/home/Sidebar";
+import MobileNav from "@/components/layout/MobileNav";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,6 @@ import { format } from "date-fns";
 const NotificationsPage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [sidebarCollapsed] = useState(false);
 
   // Fetch notifications
   const { data: notifications, isLoading } = useQuery({
@@ -34,7 +33,21 @@ const NotificationsPage = () => {
       return data;
     },
     enabled: !!user,
+    refetchInterval: 10000,
   });
+
+  // Realtime subscription for new notifications
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("notifications-realtime")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        queryClient.invalidateQueries({ queryKey: ["unread-notifications-count"] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, queryClient]);
 
   // Mark as read
   const markAsRead = useMutation({
@@ -70,13 +83,9 @@ const NotificationsPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <Sidebar isCollapsed={sidebarCollapsed} />
+      <MobileNav />
       
-      <main className={cn(
-        "transition-all duration-300 pt-16",
-        "lg:ml-64",
-        sidebarCollapsed && "lg:ml-16"
-      )}>
+      <main className="transition-all duration-300 pt-16 pb-16 md:pb-0 md:ml-64">
         {/* Header */}
         <div className="border-b bg-card px-4 lg:px-6 py-6">
           <div className="max-w-3xl mx-auto">
