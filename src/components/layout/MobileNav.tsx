@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Briefcase, Users, MessageSquare, Bell, Building2, LayoutDashboard } from "lucide-react";
+import { Home, Briefcase, Users, MessageSquare, Bell, LayoutDashboard, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -13,12 +13,7 @@ const MobileNav = () => {
     queryKey: ["unread-notifications-count", user?.id],
     queryFn: async () => {
       if (!user) return 0;
-      const { count, error } = await supabase
-        .from("notifications")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("is_read", false);
-      if (error) return 0;
+      const { count } = await supabase.from("notifications").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("is_read", false);
       return count || 0;
     },
     enabled: !!user,
@@ -29,12 +24,7 @@ const MobileNav = () => {
     queryKey: ["unread-messages-count", user?.id],
     queryFn: async () => {
       if (!user) return 0;
-      const { count, error } = await supabase
-        .from("messages")
-        .select("*", { count: "exact", head: true })
-        .eq("receiver_id", user.id)
-        .eq("is_read", false);
-      if (error) return 0;
+      const { count } = await supabase.from("messages").select("*", { count: "exact", head: true }).eq("receiver_id", user.id).eq("is_read", false);
       return count || 0;
     },
     enabled: !!user,
@@ -52,10 +42,10 @@ const MobileNav = () => {
   ];
 
   const companyItems = [
+    { icon: Home, label: "Home", href: "/" },
     { icon: LayoutDashboard, label: "Dashboard", href: "/company/dashboard" },
     { icon: Briefcase, label: "Post Job", href: "/company/post-job" },
-    { icon: Users, label: "Applicants", href: "/company/applicants" },
-    { icon: MessageSquare, label: "Messages", href: "/messages", badge: unreadMsgCount },
+    { icon: TrendingUp, label: "Analytics", href: "/company/analytics" },
     { icon: Bell, label: "Alerts", href: "/notifications", badge: unreadCount },
   ];
 

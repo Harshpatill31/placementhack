@@ -36,13 +36,17 @@ const Sidebar = ({ isCollapsed = false }: SidebarProps) => {
   const location = useLocation();
   const { user, role } = useAuth();
 
-  const mainNavItems = [
+  const studentMainNavItems = [
     { icon: Home, label: "Home", href: "/" },
     { icon: Briefcase, label: "Jobs", href: "/jobs" },
     { icon: Briefcase, label: "Internships", href: "/internships" },
-    { icon: FileText, label: "Mock Tests", href: "/mock-tests" },
-    { icon: GraduationCap, label: "Mentorships", href: "/mentorships" },
   ];
+
+  const companyMainNavItems = [
+    { icon: Home, label: "Home", href: "/" },
+  ];
+
+  const mainNavItems = role === "company" ? companyMainNavItems : studentMainNavItems;
 
   const socialNavItems = [
     { icon: Users, label: "Network", href: "/network" },
@@ -61,6 +65,7 @@ const Sidebar = ({ isCollapsed = false }: SidebarProps) => {
     { icon: Building2, label: "Dashboard", href: "/company/dashboard" },
     { icon: Briefcase, label: "Post Job", href: "/company/post-job" },
     { icon: Users, label: "Applicants", href: "/company/applicants" },
+    { icon: Code, label: "Analytics", href: "/company/analytics" },
   ];
 
   const NavItem = ({ icon: Icon, label, href }: { icon: any; label: string; href: string }) => {
