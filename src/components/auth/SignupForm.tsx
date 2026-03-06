@@ -120,12 +120,6 @@ const SignupForm = () => {
       description: "Hiring talented graduates",
       icon: Building2,
     },
-    {
-      value: "college_admin",
-      label: "College Admin",
-      description: "Managing placement cell",
-      icon: Shield,
-    },
   ];
 
   return (
