@@ -58,6 +58,9 @@ const App = () => (
             
             {/* Opportunity Routes */}
             <Route path="/internships" element={<InternshipsPage />} />
+            <Route path="/competitions" element={<CompetitionsPage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/mentorships" element={<MentorshipsPage />} />
             <Route path="/jobs/:id" element={<JobDetailPage />} />
             <Route path="/saved" element={<ProtectedRoute><SavedPage /></ProtectedRoute>} />
             
