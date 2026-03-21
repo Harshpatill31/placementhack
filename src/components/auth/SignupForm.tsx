@@ -86,8 +86,7 @@ const SignupForm = () => {
       data.email,
       data.password,
       data.fullName,
-      data.role as "student" | "company" | "college_admin",
-      data.collegeId
+      data.role as "student" | "company",
     );
 
     if (error) {
