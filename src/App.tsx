@@ -16,6 +16,9 @@ import NotFound from "./pages/NotFound";
 // Opportunity Pages
 import InternshipsPage from "./pages/InternshipsPage";
 import SavedPage from "./pages/SavedPage";
+import CompetitionsPage from "./pages/CompetitionsPage";
+import CoursesPage from "./pages/CoursesPage";
+import MentorshipsPage from "./pages/MentorshipsPage";
 
 // Social Pages
 import NetworkPage from "./pages/NetworkPage";
@@ -55,6 +58,9 @@ const App = () => (
             
             {/* Opportunity Routes */}
             <Route path="/internships" element={<InternshipsPage />} />
+            <Route path="/competitions" element={<CompetitionsPage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/mentorships" element={<MentorshipsPage />} />
             <Route path="/jobs/:id" element={<JobDetailPage />} />
             <Route path="/saved" element={<ProtectedRoute><SavedPage /></ProtectedRoute>} />
             

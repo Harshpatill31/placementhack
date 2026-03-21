@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Navbar from "@/components/layout/Navbar";
+import MobileNav from "@/components/layout/MobileNav";
 import Sidebar from "@/components/home/Sidebar";
 import OpportunityCard from "@/components/home/OpportunityCard";
 import { useOpportunitiesByType, OpportunityType } from "@/hooks/useOpportunities";
@@ -42,9 +43,10 @@ const OpportunityListPage = ({ type, title, description }: OpportunityListPagePr
     <div className="min-h-screen bg-background">
       <Navbar />
       <Sidebar isCollapsed={sidebarCollapsed} />
+      <MobileNav />
       
       <main className={cn(
-        "transition-all duration-300 pt-16",
+        "transition-all duration-300 pt-16 pb-16 md:pb-0",
         "lg:ml-64",
         sidebarCollapsed && "lg:ml-16"
       )}>

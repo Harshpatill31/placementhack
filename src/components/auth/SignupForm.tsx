@@ -86,8 +86,7 @@ const SignupForm = () => {
       data.email,
       data.password,
       data.fullName,
-      data.role as "student" | "company" | "college_admin",
-      data.collegeId
+      data.role as "student" | "company",
     );
 
     if (error) {
@@ -127,7 +126,7 @@ const SignupForm = () => {
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
         <p className="text-muted-foreground">
-          Join PlacementHub and kickstart your career
+          Join Career Compass and kickstart your career
         </p>
       </div>
 
