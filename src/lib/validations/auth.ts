@@ -30,7 +30,7 @@ export const signupSchema = z
     email: emailSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
-    role: z.enum(["student", "company", "college_admin"], {
+    role: z.enum(["student", "company"], {
       required_error: "Please select a role",
     }),
     collegeId: z.string().optional(),
@@ -38,20 +38,7 @@ export const signupSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  })
-  .refine(
-    (data) => {
-      // Students must select a college
-      if (data.role === "student") {
-        return data.collegeId && data.collegeId.length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Please select your college",
-      path: ["collegeId"],
-    }
-  );
+  });
 
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
