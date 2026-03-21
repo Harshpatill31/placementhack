@@ -81,8 +81,9 @@ const MockTestsPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <Sidebar isCollapsed={sidebarCollapsed} />
+      <MobileNav />
 
-      <main className={cn("transition-all duration-300 pt-16", "lg:ml-64", sidebarCollapsed && "lg:ml-16")}>
+      <main className={cn("transition-all duration-300 pt-16 pb-16 md:pb-0", "lg:ml-64", sidebarCollapsed && "lg:ml-16")}>
         <div className="border-b bg-card px-4 lg:px-6 py-6">
           <div className="max-w-4xl mx-auto">
             <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
