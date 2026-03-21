@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Navbar from "@/components/layout/Navbar";
+import MobileNav from "@/components/layout/MobileNav";
 import Sidebar from "@/components/home/Sidebar";
 import OpportunityCard from "@/components/home/OpportunityCard";
 import { useOpportunitiesByType, OpportunityType } from "@/hooks/useOpportunities";
