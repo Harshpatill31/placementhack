@@ -16,6 +16,9 @@ import NotFound from "./pages/NotFound";
 // Opportunity Pages
 import InternshipsPage from "./pages/InternshipsPage";
 import SavedPage from "./pages/SavedPage";
+import CompetitionsPage from "./pages/CompetitionsPage";
+import CoursesPage from "./pages/CoursesPage";
+import MentorshipsPage from "./pages/MentorshipsPage";
 
 // Social Pages
 import NetworkPage from "./pages/NetworkPage";
