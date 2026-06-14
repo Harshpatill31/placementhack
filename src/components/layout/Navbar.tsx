@@ -87,7 +87,16 @@ const Navbar = () => {
           {/* Back button + Logo */}
           <div className="flex items-center gap-2">
             {showBackButton && (
-              <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  if (window.history.length > 1) navigate(-1);
+                  else navigate("/");
+                }}
+                className="shrink-0"
+                aria-label="Go back"
+              >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             )}
