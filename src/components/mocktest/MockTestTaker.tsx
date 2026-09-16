@@ -51,7 +51,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
     queryKey: ["mock-test-questions", opportunityId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("mock_test_questions_public" as any)
+        .from("mock_test_questions")
         .select("id, question, options, difficulty, topic, created_at")
         .eq("opportunity_id", opportunityId)
         .order("created_at");

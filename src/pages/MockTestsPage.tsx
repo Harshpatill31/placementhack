@@ -37,7 +37,7 @@ const MockTestsPage = () => {
     queryKey: ["mock-test-question-counts"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("mock_test_questions_public" as any)
+        .from("mock_test_questions")
         .select("opportunity_id");
       if (error) throw error;
       const counts: Record<string, number> = {};
