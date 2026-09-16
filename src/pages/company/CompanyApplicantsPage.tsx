@@ -91,7 +91,7 @@ const CompanyApplicantsPage = () => {
       const userIds = data?.map((a) => a.user_id) || [];
       if (userIds.length === 0) return [];
 
-      const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, avatar_url, headline, email, resume_url").in("user_id", userIds);
+      const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, avatar_url, headline, resume_url").in("user_id", userIds);
 
       return data.map((app) => {
         const profile = profiles?.find((p) => p.user_id === app.user_id);
