@@ -145,7 +145,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
               <p>• Answer all questions to the best of your ability</p>
               <p>• You can navigate between questions freely</p>
               <p>• Timer will track your total time</p>
-              <p>• Results will be shown after submission</p>
+              <p>• Your answers are submitted securely for scoring</p>
             </div>
             <Button onClick={startTest} className="w-full" size="lg">
               Start Test
