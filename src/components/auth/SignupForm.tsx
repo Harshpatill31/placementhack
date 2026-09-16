@@ -62,7 +62,7 @@ const SignupForm = () => {
       data.email,
       data.password,
       data.fullName,
-      data.role as "student" | "company",
+      data.role === "company" ? "student" : data.role,
     );
 
     if (error) {
