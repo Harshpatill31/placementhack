@@ -28,7 +28,7 @@ const Index = () => {
   const { data: jobs, isLoading: loadingJobs } = useOpportunitiesByType("job", 10);
 
   const handleSearch = (query: string) => {
-    console.log("Searching:", query);
+    void query;
   };
 
   if (!user) {
