@@ -132,7 +132,7 @@ const CompanyApplicantsPage = () => {
   const filtered = applicants?.filter((a) => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
-    return (a.profile?.full_name || "").toLowerCase().includes(q) || (a.profile?.email || "").toLowerCase().includes(q);
+    return (a.profile?.full_name || "").toLowerCase().includes(q);
   });
 
   const getInitials = (name?: string | null) =>
@@ -213,7 +213,6 @@ const CompanyApplicantsPage = () => {
                         </Link>
                         <Badge className={cn("text-xs", statusColors[app.status] || "")}>{app.status.replace("_", " ")}</Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{app.profile?.email}</p>
                       <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1"><Briefcase className="h-3 w-3" /> {app.job?.title || "Unknown Job"}</span>
                         <span>{new Date(app.created_at).toLocaleDateString("en-IN")}</span>
