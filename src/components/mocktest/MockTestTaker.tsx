@@ -19,8 +19,8 @@ interface Question {
   id: string;
   question: string;
   options: string[];
-  correct_answer: number;
-  explanation: string | null;
+  correct_answer?: number;
+  explanation?: string | null;
   difficulty: string | null;
   topic: string | null;
 }
@@ -40,7 +40,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("opportunities")
-        .select("*")
+        .select("id, question, options, difficulty, topic, created_at")
         .eq("id", opportunityId)
         .single();
       if (error) throw error;
@@ -91,28 +91,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
   const submitTest = useCallback(async () => {
     if (!questions || !user) return;
 
-    const correct = answers.reduce(
-      (count, ans, i) => count + (ans === questions[i].correct_answer ? 1 : 0),
-      0
-    );
-    const score = Math.round((correct / questions.length) * 100);
-
-    try {
-      await supabase.from("mock_test_results").insert({
-        user_id: user.id,
-        opportunity_id: opportunityId,
-        score,
-        total_questions: questions.length,
-        correct_answers: correct,
-        time_taken_seconds: timeElapsed,
-        answers: answers,
-      });
-      toast.success("Test submitted successfully!");
-    } catch (err) {
-      console.error(err);
-    }
-
-    setPhase("results");
+    toast.error("Test submission is temporarily unavailable. Please try again.");
   }, [answers, questions, user, opportunityId, timeElapsed]);
 
   const formatTime = (seconds: number) => {
