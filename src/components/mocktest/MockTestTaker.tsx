@@ -40,7 +40,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("opportunities")
-        .select("id, question, options, difficulty, topic, created_at")
+        .select("*")
         .eq("id", opportunityId)
         .single();
       if (error) throw error;
