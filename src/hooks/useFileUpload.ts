@@ -52,7 +52,11 @@ export const useFileUpload = () => {
 
       setProgress(100);
       toast.success("File uploaded successfully!");
-      return data.path;
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(data.path, 60 * 60);
+      if (signedUrlError) throw signedUrlError;
+      return signedUrlData.signedUrl;
     } catch {
       toast.error("Failed to upload file");
       return null;
