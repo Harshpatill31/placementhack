@@ -45,6 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Defer role fetching
       if (session?.user) {
+        setLoading(true);
         setTimeout(() => {
           fetchUserRole(session.user.id).finally(() => setLoading(false));
         }, 0);
@@ -63,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
+        setLoading(true);
         fetchUserRole(session.user.id).finally(() => setLoading(false));
       } else {
         setLoading(false);
