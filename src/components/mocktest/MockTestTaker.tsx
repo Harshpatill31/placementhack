@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight, Clock, CheckCircle, XCircle, Trophy, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -152,96 +152,6 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
             </Button>
           </CardContent>
         </Card>
-      </div>
-    );
-  }
-
-  // RESULTS
-  if (phase === "results") {
-    const correct = answers.reduce(
-      (count, ans, i) => count + (ans === questions[i].correct_answer ? 1 : 0),
-      0
-    );
-    const score = Math.round((correct / questions.length) * 100);
-    const wrong = questions.length - correct - answers.filter((a) => a === null).length;
-    const unanswered = answers.filter((a) => a === null).length;
-
-    return (
-      <div className="min-h-screen bg-background p-4">
-        <div className="max-w-3xl mx-auto">
-          <Button variant="ghost" size="sm" onClick={onBack} className="mb-4">
-            <ChevronLeft className="h-4 w-4 mr-1" /> Back to Tests
-          </Button>
-
-          {/* Score card */}
-          <Card className="mb-6">
-            <CardContent className="p-8 text-center">
-              <Trophy className={cn("h-16 w-16 mx-auto mb-4", score >= 70 ? "text-yellow-500" : score >= 40 ? "text-primary" : "text-muted-foreground")} />
-              <h1 className="text-4xl font-bold mb-2">{score}%</h1>
-              <p className="text-muted-foreground mb-6">{testInfo?.title}</p>
-              <div className="grid grid-cols-4 gap-4 text-sm">
-                <div><div className="text-xl font-bold text-primary">{questions.length}</div><div className="text-muted-foreground">Total</div></div>
-                <div><div className="text-xl font-bold text-green-500">{correct}</div><div className="text-muted-foreground">Correct</div></div>
-                <div><div className="text-xl font-bold text-destructive">{wrong}</div><div className="text-muted-foreground">Wrong</div></div>
-                <div><div className="text-xl font-bold">{formatTime(timeElapsed)}</div><div className="text-muted-foreground">Time</div></div>
-              </div>
-              <div className="flex gap-3 justify-center mt-6">
-                <Button onClick={startTest} variant="outline" className="gap-2">
-                  <RotateCcw className="h-4 w-4" /> Retake
-                </Button>
-                <Button onClick={onBack}>Done</Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Detailed review */}
-          <h2 className="text-lg font-semibold mb-4">Detailed Review</h2>
-          <div className="space-y-4">
-            {questions.map((q, i) => {
-              const userAnswer = answers[i];
-              const isCorrect = userAnswer === q.correct_answer;
-              return (
-                <Card key={q.id} className={cn("border-l-4", isCorrect ? "border-l-green-500" : userAnswer === null ? "border-l-muted" : "border-l-destructive")}>
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="shrink-0 mt-0.5">
-                        {isCorrect ? (
-                          <CheckCircle className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <XCircle className="h-5 w-5 text-destructive" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-sm mb-2">
-                          Q{i + 1}. {q.question}
-                        </p>
-                        <div className="grid gap-1.5 mb-2">
-                          {q.options.map((opt: string, oi: number) => (
-                            <div
-                              key={oi}
-                              className={cn(
-                                "text-xs px-3 py-1.5 rounded border",
-                                oi === q.correct_answer && "bg-green-50 border-green-300 text-green-700 dark:bg-green-900/20 dark:text-green-400",
-                                oi === userAnswer && oi !== q.correct_answer && "bg-red-50 border-red-300 text-red-700 dark:bg-red-900/20 dark:text-red-400"
-                              )}
-                            >
-                              {String.fromCharCode(65 + oi)}. {opt}
-                            </div>
-                          ))}
-                        </div>
-                        {q.explanation && (
-                          <p className="text-xs text-muted-foreground bg-muted rounded p-2">
-                            💡 {q.explanation}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
       </div>
     );
   }
