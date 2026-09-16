@@ -130,7 +130,6 @@ const UserProfilePage = () => {
                 <p className="text-muted-foreground">{profile.headline || ""}</p>
                 <div className="flex flex-wrap gap-3 mt-3 text-sm text-muted-foreground">
                   {profile.location && <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{profile.location}</span>}
-                  {profile.email && <span className="flex items-center gap-1"><Mail className="h-4 w-4" />{profile.email}</span>}
                   {profile.linkedin_url && <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Linkedin className="h-4 w-4" />LinkedIn</a>}
                   {profile.github_url && <a href={profile.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Github className="h-4 w-4" />GitHub</a>}
                   {profile.website && <a href={profile.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Globe className="h-4 w-4" />Website</a>}
