@@ -50,17 +50,15 @@ export const useFileUpload = () => {
 
       if (error) throw error;
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(data.path);
-
       setProgress(100);
       toast.success("File uploaded successfully!");
-      return urlData.publicUrl;
-    } catch (error: any) {
-      console.error("Upload error:", error);
-      toast.error(error.message || "Failed to upload file");
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(data.path, 60 * 60);
+      if (signedUrlError) throw signedUrlError;
+      return signedUrlData.signedUrl;
+    } catch {
+      toast.error("Failed to upload file");
       return null;
     } finally {
       setUploading(false);
@@ -72,8 +70,7 @@ export const useFileUpload = () => {
       const { error } = await supabase.storage.from(bucket).remove([path]);
       if (error) throw error;
       return true;
-    } catch (error: any) {
-      console.error("Delete error:", error);
+    } catch {
       toast.error("Failed to delete file");
       return false;
     }

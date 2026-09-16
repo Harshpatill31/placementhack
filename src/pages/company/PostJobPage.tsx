@@ -82,7 +82,6 @@ const PostJobPage = () => {
         .eq("user_id", user.id)
         .single();
       if (error && error.code !== "PGRST116") {
-        console.error(error);
       }
       setCompany(data);
       setLoading(false);

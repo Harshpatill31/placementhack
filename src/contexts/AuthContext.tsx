@@ -45,11 +45,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Defer role fetching
       if (session?.user) {
+        setLoading(true);
         setTimeout(() => {
-          fetchUserRole(session.user.id);
+          fetchUserRole(session.user.id).finally(() => setLoading(false));
         }, 0);
       } else {
         setRole(null);
+        setLoading(false);
       }
 
       if (event === "SIGNED_OUT") {
@@ -62,9 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchUserRole(session.user.id);
+        setLoading(true);
+        fetchUserRole(session.user.id).finally(() => setLoading(false));
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -79,13 +83,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         .single();
 
       if (error && error.code !== "PGRST116") {
-        console.error("Error fetching user role:", error);
         return;
       }
 
       setRole(data?.role ?? null);
     } catch (err) {
-      console.error("Error in fetchUserRole:", err);
+      setRole(null);
     }
   };
 
@@ -121,9 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           role: role,
         });
 
-        if (roleError) {
-          console.error("Error creating user role:", roleError);
-        }
+        if (roleError) return { error: new Error("We couldn't finish setting up your account. Please try again.") };
 
         // Update profile with college if student
         if (role === "student" && collegeId) {
@@ -132,9 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             .update({ college_id: collegeId })
             .eq("user_id", data.user.id);
 
-          if (profileError) {
-            console.error("Error updating profile:", profileError);
-          }
+          if (profileError) return { error: new Error("We couldn't finish setting up your profile. Please try again.") };
         }
       }
 

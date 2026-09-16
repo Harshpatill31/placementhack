@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
@@ -26,7 +26,6 @@ import { signupSchema, type SignupFormData } from "@/lib/validations/auth";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 import SocialAuthButtons from "./SocialAuthButtons";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 interface College {
@@ -41,8 +40,6 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [colleges, setColleges] = useState<College[]>([]);
-  const [loadingColleges, setLoadingColleges] = useState(true);
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -59,34 +56,13 @@ const SignupForm = () => {
   const watchRole = form.watch("role");
   const watchPassword = form.watch("password");
 
-  useEffect(() => {
-    const fetchColleges = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("colleges")
-          .select("id, name, city")
-          .eq("verification_status", "approved")
-          .order("name");
-
-        if (error) throw error;
-        setColleges(data || []);
-      } catch (err) {
-        console.error("Error fetching colleges:", err);
-      } finally {
-        setLoadingColleges(false);
-      }
-    };
-
-    fetchColleges();
-  }, []);
-
   const onSubmit = async (data: SignupFormData) => {
     setLoading(true);
     const { error } = await signUp(
       data.email,
       data.password,
       data.fullName,
-      data.role as "student" | "company",
+      data.role === "company" ? "student" : data.role,
     );
 
     if (error) {

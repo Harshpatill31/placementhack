@@ -20,7 +20,7 @@ const UserProfilePage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select("user_id, full_name, avatar_url, banner_url, headline, bio, location, website, linkedin_url, github_url, is_available")
         .eq("user_id", userId!)
         .single();
       if (error) throw error;
@@ -32,7 +32,7 @@ const UserProfilePage = () => {
   const { data: experience } = useQuery({
     queryKey: ["public-experience", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("experience").select("*").eq("user_id", userId!).order("start_date", { ascending: false });
+      const { data } = await supabase.from("experience").select("id, user_id, company_name, title, location, start_date, end_date, is_current, description").eq("user_id", userId!).order("start_date", { ascending: false });
       return data || [];
     },
     enabled: !!userId,
@@ -41,7 +41,7 @@ const UserProfilePage = () => {
   const { data: education } = useQuery({
     queryKey: ["public-education", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("education").select("*").eq("user_id", userId!).order("start_date", { ascending: false });
+      const { data } = await supabase.from("education").select("id, user_id, institution, degree, field_of_study, start_date, end_date, is_current, cgpa, description").eq("user_id", userId!).order("start_date", { ascending: false });
       return data || [];
     },
     enabled: !!userId,
@@ -50,7 +50,7 @@ const UserProfilePage = () => {
   const { data: skills } = useQuery({
     queryKey: ["public-skills", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("user_skills").select("*, skill:skills(name, category)").eq("user_id", userId!);
+      const { data } = await supabase.from("user_skills").select("id, user_id, proficiency_level, years_experience, skill:skills(name, category)").eq("user_id", userId!);
       return (data || []).map((s: any) => ({ ...s, skill: Array.isArray(s.skill) ? s.skill[0] : s.skill }));
     },
     enabled: !!userId,
@@ -59,7 +59,7 @@ const UserProfilePage = () => {
   const { data: projects } = useQuery({
     queryKey: ["public-projects", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("projects").select("*").eq("user_id", userId!).order("created_at", { ascending: false });
+      const { data } = await supabase.from("projects").select("id, user_id, title, description, project_url, github_url, technologies, start_date, end_date, is_featured").eq("user_id", userId!).order("created_at", { ascending: false });
       return data || [];
     },
     enabled: !!userId,
@@ -68,7 +68,7 @@ const UserProfilePage = () => {
   const { data: certifications } = useQuery({
     queryKey: ["public-certifications", userId],
     queryFn: async () => {
-      const { data } = await supabase.from("certifications").select("*").eq("user_id", userId!).order("issue_date", { ascending: false });
+      const { data } = await supabase.from("certifications").select("id, user_id, name, issuing_organization, issue_date, expiry_date, credential_id, credential_url").eq("user_id", userId!).order("issue_date", { ascending: false });
       return data || [];
     },
     enabled: !!userId,
@@ -130,7 +130,6 @@ const UserProfilePage = () => {
                 <p className="text-muted-foreground">{profile.headline || ""}</p>
                 <div className="flex flex-wrap gap-3 mt-3 text-sm text-muted-foreground">
                   {profile.location && <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{profile.location}</span>}
-                  {profile.email && <span className="flex items-center gap-1"><Mail className="h-4 w-4" />{profile.email}</span>}
                   {profile.linkedin_url && <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Linkedin className="h-4 w-4" />LinkedIn</a>}
                   {profile.github_url && <a href={profile.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Github className="h-4 w-4" />GitHub</a>}
                   {profile.website && <a href={profile.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Globe className="h-4 w-4" />Website</a>}

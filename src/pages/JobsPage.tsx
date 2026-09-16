@@ -134,8 +134,7 @@ const JobsPage = () => {
 
       setHasMore(formattedJobs.length === PAGE_SIZE);
       if (!reset) setPage((p) => p + 1);
-    } catch (err) {
-      console.error("Error fetching jobs:", err);
+    } catch {
       toast.error("Failed to load jobs");
     } finally {
       setLoading(false);
@@ -152,8 +151,7 @@ const JobsPage = () => {
 
       if (error) throw error;
       setSavedJobs(new Set(data?.map((s) => s.job_id) || []));
-    } catch (err) {
-      console.error("Error fetching saved jobs:", err);
+    } catch {
     }
   };
 
@@ -184,8 +182,7 @@ const JobsPage = () => {
         setSavedJobs((prev) => new Set([...prev, jobId]));
         toast.success("Job saved successfully");
       }
-    } catch (err) {
-      console.error("Error toggling save:", err);
+    } catch {
       toast.error("Failed to save job");
     }
   };

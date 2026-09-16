@@ -91,8 +91,7 @@ const CompanyAnalyticsPage = () => {
         { name: "Hired", value: hired },
         { name: "Rejected", value: rejected },
       ].filter(d => d.value > 0));
-    } catch (err) {
-      console.error("Analytics error:", err);
+    } catch {
     } finally {
       setLoading(false);
     }

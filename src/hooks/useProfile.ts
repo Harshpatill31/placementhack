@@ -70,8 +70,7 @@ export const useProfile = (userId: string | undefined) => {
         projects: projRes.data || [],
         achievements: achRes.data || [],
       });
-    } catch (err) {
-      console.error("Error fetching profile:", err);
+    } catch {
       toast.error("Failed to load profile");
     } finally {
       setLoading(false);

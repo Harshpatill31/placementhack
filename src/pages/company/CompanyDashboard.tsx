@@ -138,8 +138,7 @@ const CompanyDashboard = () => {
         }));
         setRecentJobs(formattedJobs);
       }
-    } catch (err) {
-      console.error("Error fetching dashboard data:", err);
+    } catch {
     } finally {
       setLoading(false);
     }

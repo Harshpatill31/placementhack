@@ -91,8 +91,7 @@ const ApplicationsPage = () => {
       }));
       
       setApplications(formattedApplications);
-    } catch (err) {
-      console.error("Error fetching applications:", err);
+    } catch {
     } finally {
       setLoading(false);
     }

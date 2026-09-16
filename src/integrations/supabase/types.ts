@@ -1397,7 +1397,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      mock_test_questions_public: {
+        Row: {
+          created_at: string | null
+          difficulty: string | null
+          id: string | null
+          opportunity_id: string | null
+          options: Json | null
+          question: string | null
+          topic: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          difficulty?: string | null
+          id?: string | null
+          opportunity_id?: string | null
+          options?: Json | null
+          question?: string | null
+          topic?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          difficulty?: string | null
+          id?: string | null
+          opportunity_id?: string | null
+          options?: Json | null
+          question?: string | null
+          topic?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_test_questions_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       get_user_role: {
