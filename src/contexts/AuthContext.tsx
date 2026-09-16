@@ -45,11 +45,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Defer role fetching
       if (session?.user) {
+        setLoading(true);
         setTimeout(() => {
-          fetchUserRole(session.user.id);
+          fetchUserRole(session.user.id).finally(() => setLoading(false));
         }, 0);
       } else {
         setRole(null);
+        setLoading(false);
       }
 
       if (event === "SIGNED_OUT") {
