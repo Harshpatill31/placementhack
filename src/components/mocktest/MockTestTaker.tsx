@@ -40,7 +40,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("opportunities")
-        .select("*")
+        .select("id, title, short_description, duration")
         .eq("id", opportunityId)
         .single();
       if (error) throw error;
@@ -53,7 +53,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("mock_test_questions")
-        .select("*")
+        .select("id, question, options, difficulty, topic, created_at")
         .eq("opportunity_id", opportunityId)
         .order("created_at");
       if (error) throw error;
