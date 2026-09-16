@@ -25,7 +25,7 @@ interface Question {
   topic: string | null;
 }
 
-type TestPhase = "intro" | "test" | "results";
+type TestPhase = "intro" | "test";
 
 const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
   const { user } = useAuth();
@@ -33,7 +33,6 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [timeElapsed, setTimeElapsed] = useState(0);
-  const [showExplanation, setShowExplanation] = useState(false);
 
   const { data: testInfo } = useQuery({
     queryKey: ["mock-test-info", opportunityId],
@@ -92,7 +91,7 @@ const MockTestTaker = ({ opportunityId, onBack }: MockTestTakerProps) => {
     if (!questions || !user) return;
 
     toast.error("Test submission is temporarily unavailable. Please try again.");
-  }, [answers, questions, user, opportunityId, timeElapsed]);
+  }, [questions, user]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
