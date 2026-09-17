@@ -16,6 +16,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import PermissionsAssistant from "@/components/privacy/PermissionsAssistant";
 
 const SettingsPage = () => {
   const { user, signOut, updatePassword } = useAuth();
@@ -252,6 +253,7 @@ const SettingsPage = () => {
 
             {/* Privacy */}
             <TabsContent value="privacy" className="space-y-6">
+              <PermissionsAssistant />
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5" /> Privacy Settings</CardTitle>
