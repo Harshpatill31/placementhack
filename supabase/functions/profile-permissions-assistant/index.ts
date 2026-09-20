@@ -1,3 +1,7 @@
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { createOpenAI } from "npm:@ai-sdk/openai";
+import { streamText } from "npm:ai";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -19,15 +23,6 @@ Known access rules:
 Answer only questions about Career Compass privacy and visibility. Do not invent permissions, reveal implementation details, request personal data, or advise anyone to bypass access controls. If a question is outside this scope, say that you can explain profile and application visibility only. Keep answers under 180 words. Use short headings or bullets when helpful. Never claim that an accepted connection can see an application.
 `;
 
-const getErrorMessage = (status: number, body: string) => {
-  try {
-    const parsed = JSON.parse(body) as { error?: string; message?: string };
-    return parsed.error || parsed.message || body;
-  } catch {
-    return body;
-  }
-};
-
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -42,6 +37,27 @@ Deno.serve(async (request) => {
 
   const authorization = request.headers.get("Authorization");
   if (!authorization?.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Please sign in to use the privacy assistant." }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return new Response(JSON.stringify({ error: "The privacy assistant is not configured yet." }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: authorization } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data: authData, error: authError } = await authClient.auth.getUser();
+  if (authError || !authData.user) {
     return new Response(JSON.stringify({ error: "Please sign in to use the privacy assistant." }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -76,48 +92,51 @@ Deno.serve(async (request) => {
   }
 
   try {
-    const upstream = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
-      method: "POST",
+    let runId = request.headers.get("X-Lovable-AIG-Run-ID")?.trim() || undefined;
+    const gatewayFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const headers = new Headers(init?.headers);
+      if (runId && !headers.has("X-Lovable-AIG-Run-ID")) headers.set("X-Lovable-AIG-Run-ID", runId);
+      const response = await fetch(input, { ...init, headers });
+      runId = response.headers.get("X-Lovable-AIG-Run-ID")?.trim() || runId;
+      return response;
+    };
+
+    const lovable = createOpenAI({
+      baseURL: "https://ai.gateway.lovable.dev/v1",
+      apiKey: lovableApiKey,
       headers: {
-        "Content-Type": "application/json",
         "Lovable-API-Key": lovableApiKey,
-        "X-Lovable-AIG-SDK": "fetch",
+        "X-Lovable-AIG-SDK": "vercel-ai-sdk",
+        ...(runId ? { "X-Lovable-AIG-Run-ID": runId } : {}),
       },
-      body: JSON.stringify({
-        model: "openai/gpt-6-astra",
-        stream: true,
-        reasoning: { effort: "low", summary: "auto" },
-        input: [
-          { role: "system", content: [{ type: "input_text", text: policyContext }] },
-          { role: "user", content: [{ type: "input_text", text: trimmedQuestion }] },
-        ],
-      }),
-      signal: request.signal,
+      fetch: gatewayFetch,
     });
 
-    if (!upstream.ok) {
-      const errorBody = await upstream.text().catch(() => "");
-      return new Response(JSON.stringify({ error: getErrorMessage(upstream.status, errorBody) }), {
-        status: upstream.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const result = streamText({
+      model: lovable.responses("openai/gpt-6-astra"),
+      system: policyContext,
+      prompt: trimmedQuestion,
+      abortSignal: request.signal,
+      providerOptions: {
+        openai: {
+          forceReasoning: true,
+          reasoningEffort: "low",
+          reasoningSummary: "auto",
+          store: false,
+          include: ["reasoning.encrypted_content"],
+        },
+      },
+    });
 
-    if (!upstream.body) {
-      return new Response(JSON.stringify({ error: "The privacy assistant returned no response." }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    return new Response(upstream.body, {
-      status: upstream.status,
+    const response = result.toTextStreamResponse({
       headers: {
         ...corsHeaders,
-        "Content-Type": "text/event-stream",
+        "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache",
+        ...(runId ? { "X-Lovable-AIG-Run-ID": runId } : {}),
       },
     });
+    return response;
   } catch (error) {
     if (request.signal.aborted) {
       return new Response(null, { status: 499, headers: corsHeaders });
