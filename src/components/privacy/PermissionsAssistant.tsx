@@ -1,8 +1,21 @@
 import { useState } from "react";
-import { Bot, Check, Loader2, Send, ShieldCheck, UserRound } from "lucide-react";
+import { Bot, Check, Copy, Loader2, Send, ShieldCheck, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationEmptyState,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
+import {
+  PromptInput,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  type PromptInputMessage,
+} from "@/components/ai-elements/prompt-input";
+import { Shimmer } from "@/components/ai-elements/shimmer";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -66,43 +79,15 @@ const PermissionsAssistant = () => {
       if (!response.body) throw new Error("The privacy assistant returned no response.");
 
       const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
-      let buffer = "";
       let answer = "";
-      let reasoning = "";
-
-      const appendEvent = (rawEvent: string) => {
-        const dataLine = rawEvent.split("\n").find((line) => line.startsWith("data:"));
-        if (!dataLine) return;
-        const payloadText = dataLine.slice(5).trim();
-        if (!payloadText || payloadText === "[DONE]") return;
-        try {
-          const payload = JSON.parse(payloadText) as {
-            type?: string;
-            delta?: string;
-            text?: string;
-            response?: { output_text?: string };
-          };
-          if (payload.type === "response.output_text.delta") answer += payload.delta || "";
-          if (payload.type === "response.reasoning_summary_text.delta") reasoning += payload.delta || "";
-          if (payload.type === "response.completed" && !answer) {
-            answer = payload.response?.output_text || "";
-          }
-        } catch {
-          // Ignore keep-alive or incomplete SSE frames.
-        }
-      };
 
       while (true) {
         const { value: chunk, done } = await reader.read();
         if (done) break;
-        buffer += chunk;
-        const events = buffer.split("\n\n");
-        buffer = events.pop() || "";
-        events.forEach(appendEvent);
+        answer += chunk;
       }
-      if (buffer.trim()) appendEvent(buffer);
 
-      const assistantText = answer.trim() || reasoning.trim() || "I couldn't find an explanation for that question.";
+      const assistantText = answer.trim() || "I couldn't find an explanation for that question.";
       setMessages((current) => [...current, {
         id: `${Date.now()}-assistant`,
         role: "assistant",
@@ -139,13 +124,14 @@ const PermissionsAssistant = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 p-4 sm:p-6">
+      <CardContent className="flex min-h-[26rem] flex-col gap-4 p-4 sm:p-6">
         {messages.length === 0 ? (
           <div className="space-y-3">
-            <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-3 text-sm">
-              <Bot className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <p className="text-muted-foreground">I explain the visibility rules without accessing or displaying your private records.</p>
-            </div>
+            <ConversationEmptyState
+              icon={<ShieldCheck className="size-10" />}
+              title="Ask about your data"
+              description="I explain visibility rules without accessing or displaying your private records."
+            />
             <div className="flex flex-wrap gap-2">
               {starterQuestions.map((starter) => (
                 <Button key={starter} variant="outline" size="sm" className="h-auto whitespace-normal text-left" onClick={() => askQuestion(starter)}>
@@ -155,48 +141,46 @@ const PermissionsAssistant = () => {
             </div>
           </div>
         ) : (
-          <div className="max-h-80 space-y-3 overflow-y-auto pr-1" aria-live="polite">
-            {messages.map((message) => (
-              <div key={message.id} className={cn("flex items-start gap-3", message.role === "user" && "justify-end")}>
-                {message.role === "assistant" && <Bot className="mt-1 h-4 w-4 shrink-0 text-primary" />}
-                <div className={cn(
-                  "max-w-[88%] whitespace-pre-wrap rounded-lg px-3 py-2 text-sm",
-                  message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground",
-                )}>
-                  {message.content}
+          <Conversation className="min-h-0 flex-1 rounded-md border bg-background/50" aria-label="Privacy assistant conversation">
+            <ConversationContent aria-live="polite">
+              {messages.map((message) => (
+                <Message from={message.role} key={message.id}>
+                  <MessageContent>
+                    {message.role === "assistant" ? <MessageResponse>{message.content}</MessageResponse> : message.content}
+                  </MessageContent>
+                </Message>
+              ))}
+              {isLoading && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Bot className="h-4 w-4 text-primary" />
+                  <Shimmer>Checking the access rules…</Shimmer>
                 </div>
-                {message.role === "user" && <UserRound className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin text-primary" /> Checking the access rules…
-              </div>
-            )}
-          </div>
+              )}
+            </ConversationContent>
+            <ConversationScrollButton aria-label="Scroll to latest answer" />
+          </Conversation>
         )}
 
-        <form
-          className="flex flex-col gap-2 sm:flex-row"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void askQuestion();
+        <PromptInput
+          onSubmit={(message: PromptInputMessage) => {
+            void askQuestion(message.text);
           }}
+          className="w-full"
         >
-          <Textarea
+          <PromptInputTextarea
             value={question}
-            onChange={(event) => setQuestion(event.target.value)}
-            placeholder="Ask a privacy question…"
+            onChange={(event) => setQuestion(event.currentTarget.value)}
+            placeholder="Ask who can see your data…"
             aria-label="Ask the privacy assistant"
             maxLength={800}
-            className="min-h-20 resize-none sm:min-h-10"
             disabled={isLoading}
           />
-          <Button type="submit" className="gap-2 sm:self-end" disabled={!question.trim() || isLoading}>
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            Ask
-          </Button>
-        </form>
+          <PromptInputSubmit
+            status={isLoading ? "submitted" : "ready"}
+            disabled={!question.trim() || isLoading}
+            aria-label="Ask privacy assistant"
+          />
+        </PromptInput>
       </CardContent>
     </Card>
   );
