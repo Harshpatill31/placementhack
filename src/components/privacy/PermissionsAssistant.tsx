@@ -11,6 +11,7 @@ import {
 import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import {
   PromptInput,
+  PromptInputFooter,
   PromptInputSubmit,
   PromptInputTextarea,
   type PromptInputMessage,
@@ -175,11 +176,13 @@ const PermissionsAssistant = () => {
             maxLength={800}
             disabled={isLoading}
           />
-          <PromptInputSubmit
-            status={isLoading ? "submitted" : "ready"}
-            disabled={!question.trim() || isLoading}
-            aria-label="Ask privacy assistant"
-          />
+          <PromptInputFooter className="justify-end">
+            <PromptInputSubmit
+              status={isLoading ? "submitted" : "ready"}
+              disabled={!question.trim() || isLoading}
+              aria-label="Ask privacy assistant"
+            />
+          </PromptInputFooter>
         </PromptInput>
       </CardContent>
     </Card>
